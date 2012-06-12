@@ -1,1 +1,0 @@
-/Users/hughw/workspace/witsml-common/src/main/rb/com/wellstorm/witsml/servlet/repository/las2witsml.rb
