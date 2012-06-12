@@ -16,15 +16,14 @@
 
 require 'optparse'
 
-require "#{File.dirname(__FILE__)}/las_file"
-require "#{File.dirname(__FILE__)}/witsml_file"
-require "#{File.dirname(__FILE__)}/las2witsml"
-
+require "las_file"
+require "witsml_file"
+require "las2witsml"
 
 options = {:v=>false}
 
 opts =OptionParser.new do |o|
-  o.banner = "Usage: l2w [-nl name] [-uw uid] [-uwb uid] [-ul uid] [-h] lasfile"
+  o.banner = "Usage: las2witsml [-n name] [-u uid] [-b uid] [-l uid] [-x version] [-h] [-v] lasfile"
 
   o.on("-n", "--namelog name", "Name to give the WITSML log; default 'Untitled'") do |v|
     options[:name] = v
@@ -38,6 +37,9 @@ opts =OptionParser.new do |o|
   end
   o.on("-l", "--uidlog  uid", "WITSML uid to assign the log") do |v|
     options[:ul] = v
+  end
+  o.on("-x", "--version  version", "WITSML version to emit, either 1.3.1 or 1.4.1; default 1.4.1") do |v|
+    options[:version] = v
   end
   o.on("-v", "--verbose", "Emit diagnostic output on stderr") do |v|
     options[:v] = v
@@ -62,7 +64,15 @@ ARGV.each do|a|
   l2w = Las2Witsml.new
   infile = File.new a, 'r'
   outfile = $stdout
-  l2w.run infile, outfile, options[:uw] || "",  options[:uwb] || "",  options[:ul] || "", options[:name] || 'Untitled', options[:v] != false
+
+  case options[:version]
+  when '1.3.1', '1.3.1.1', '1.3.1.0'
+    version = 1311
+  else
+    version = 1410
+  end
+    
+  l2w.run infile, outfile, options[:uw] || "",  options[:uwb] || "",  options[:ul] || "", options[:name] || 'Untitled', version, options[:v] != false
 end
 
 
