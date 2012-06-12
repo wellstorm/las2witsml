@@ -21,7 +21,7 @@ require "#{File.dirname(__FILE__)}/witsml_file"
 require "#{File.dirname(__FILE__)}/las2witsml"
 
 
-options = {}
+options = {:v=>false}
 
 opts =OptionParser.new do |o|
   o.banner = "Usage: l2w [-nl name] [-uw uid] [-uwb uid] [-ul uid] [-h] lasfile"
@@ -38,6 +38,9 @@ opts =OptionParser.new do |o|
   end
   o.on("-l", "--uidlog  uid", "WITSML uid to assign the log") do |v|
     options[:ul] = v
+  end
+  o.on("-v", "--verbose", "Emit diagnostic output on stderr") do |v|
+    options[:v] = v
   end
 
   o.on_tail("-h", "--help", "Show this message") do
@@ -59,7 +62,7 @@ ARGV.each do|a|
   l2w = Las2Witsml.new
   infile = File.new a, 'r'
   outfile = $stdout
-  l2w.run infile, outfile, options[:uw] || "",  options[:uwb] || "",  options[:ul] || "", options[:name] || 'Untitled'
+  l2w.run infile, outfile, options[:uw] || "",  options[:uwb] || "",  options[:ul] || "", options[:name] || 'Untitled', options[:v] != false
 end
 
 
