@@ -50,8 +50,8 @@ end
 
 opts.parse!
 if ( !options[:url] )
-  puts(opts.help)
-  exit 1
+  #puts(opts.help)
+  #exit 1
 end
 
 
