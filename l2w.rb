@@ -26,17 +26,17 @@ options = {:defs => {}}
 opts =OptionParser.new do |o|
   o.banner = "Usage: l2w [-nl name] [-uw uid] [-uwb uid] [-ul uid] [-h] lasfile"
 
-  o.on("-nl", "--namelog name", "Name to give the WITSML log; default 'Untitled'") do |v|
+  o.on("-n", "--namelog name", "Name to give the WITSML log; default 'Untitled'") do |v|
     options[:name] = v
   end
 
-  o.on("-uw", "--uidwell uid", "WITSML uid of the containing well") do |v|
+  o.on("-u", "--uidwell uid", "WITSML uid of the containing well") do |v|
     options[:uw] = v
   end
-  o.on("-uwb", "--uidwellbore uid", "WITSML uid of the containing wellbore") do |v|
+  o.on("-b", "--uidwellbore uid", "WITSML uid of the containing wellbore") do |v|
     options[:uwb] = v
   end
-  o.on("-ul", "--uidlog  uid", "WITSML uid to assign the log") do |v|
+  o.on("-l", "--uidlog  uid", "WITSML uid to assign the log") do |v|
     options[:ul] = v
   end
 

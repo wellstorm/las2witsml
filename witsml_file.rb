@@ -26,9 +26,10 @@ class WitsmlFile
     'ft per hour'=>'ftPh',
     'min/ft'=>'minPft'}
 
-  def initialize(out)
+  def initialize(out, witsml_version = 1410)
     @indent = 0
     @out = out
+    @witsml_version = witsml_version
   end
   
 
@@ -99,8 +100,16 @@ class WitsmlFile
   def from_las_file(las_file, uid_well='$UIDWELL', uid_wellbore='$UIDWELLBORE', uid='$UID', name='$NAME', verbose=false)
     new_lcis, index_lci, is_index_index, get_index = digest_las(las_file)
  
+    if @witsml_version >= 1410
+      ns = 'http://www.witsml.org/schemas/1series'
+      vers = '1.4.1.0'
+    else
+      ns = 'http://www.witsml.org/schemas/131'
+      vers = '1.3.1.1'
+    end
+    
     index_curve = new_lcis[0].mnemonic  # assume first column is index
-    add_element('logs',{'xmlns'=>'http://www.witsml.org/schemas/131', 'version'=>'1.3.1.1'}) do
+    add_element('logs',{'xmlns'=>ns, 'version'=>vers}) do
       add_element('log', {'uidWell' => uid_well, 'uidWellbore'=>uid_wellbore, 'uid' => uid}) do
         add_text_element  'nameWell', name
         add_text_element  'nameWellbore', name
@@ -125,7 +134,12 @@ class WitsmlFile
           add_text_element  'endDateTimeIndex', las_file.stop_date_time_index.iso8601 if las_file.stop_date_time_index
         end 
         #add_text_element  'direction' 
-        add_text_element  'indexCurve', index_curve, {'columnIndex'=>1}
+        
+        if @witsml_version >= 1410
+          add_text_element  'indexCurve', index_curve
+        else
+          add_text_element  'indexCurve', index_curve, {'columnIndex'=>1}
+        end
         add_text_element  'nullValue', las_file.null_value
 
        
@@ -169,6 +183,10 @@ class WitsmlFile
           
           # Now add the curve data
           log_data = add_element 'logData' do
+            if @witsml_version >= 1410
+              add_text_element 'mnemonicList', new_lcis.map{|lci| lci.mnemonic}.join(',')
+              add_text_element 'unitList', new_lcis.map{|lci| lci.unit}.join(',')              
+            end 
 
             n = 0
             tempfile.each_line do |values|
@@ -225,7 +243,9 @@ class WitsmlFile
         add_text_element  'minDateTimeIndex', min_index  if min_index
         add_text_element  'maxDateTimeIndex', max_index if max_index
       end
-      add_text_element  'columnIndex', column_index.to_s
+      if @witsml_version < 1410
+        add_text_element  'columnIndex', column_index.to_s
+      end
       add_text_element  'curveDescription',las_lci.description if las_lci.description && las_lci.description.length > 0
     end
   end
