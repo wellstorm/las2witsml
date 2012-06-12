@@ -98,7 +98,7 @@ class WitsmlFile
  
   
   def from_las_file(las_file, uid_well='$UIDWELL', uid_wellbore='$UIDWELLBORE', uid='$UID', name='$NAME', verbose=false)
-    new_lcis, index_lci, is_index_index, get_index = digest_las(las_file)
+    new_lcis, _, is_index_index, get_index = digest_las(las_file)  #unused index_lci
  
     if @witsml_version >= 1410
       ns = 'http://www.witsml.org/schemas/1series'
@@ -182,7 +182,7 @@ class WitsmlFile
         
           
           # Now add the curve data
-          log_data = add_element 'logData' do
+          add_element 'logData' do
             if @witsml_version >= 1410
               add_text_element 'mnemonicList', new_lcis.map{|lci| lci.mnemonic}.join(',')
               add_text_element 'unitList', new_lcis.map{|lci| lci.unit}.join(',')              
@@ -277,7 +277,8 @@ class WitsmlFile
       #assume time will be in the next column
       time_index = (date_index + 1) if date_index
     end
-    time_fmt = lcis[time_index].unit.downcase
+    # TODO we never used time_fmt -- why? commenting to suppress warning
+    #time_fmt = lcis[time_index].unit.downcase
     
     if !date_index then
       date_index = time_index if time_index
@@ -318,7 +319,7 @@ class WitsmlFile
 #CALI  .MM         45 280 01 00 :  10      CALIPER
 #DRHO .K/M3        45 356 01 00 :  11      DENSITY CORRECTION
  
-    witsml_unit =  map_las_to_witsml_units[las_unit.downcase] || las_unit.downcase
+    map_las_to_witsml_units[las_unit.downcase] || las_unit.downcase
     
   end
 

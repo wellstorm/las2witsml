@@ -136,7 +136,7 @@ class LasFile
   
   def curve_information
     while m = /^([^~][^\.]+)\.([^: \t]*)\s*([^:]*):(.*)$/.match(line = next_line)
-      mnemonic, unit, api_code, description = [*m].slice(1, 4).collect {|s| s.strip}
+      mnemonic, unit, _, description = [*m].slice(1, 4).collect {|s| s.strip}   #api_code
       log_curve_info mnemonic, unit, description
     end
     put_back_line(line)    
@@ -165,7 +165,7 @@ class LasFile
 # APD  .F          19.000000               :Elevation of Depth Reference (LMF) above Permanent Dat
        
     while m = /^([^~][^\.]+)\.([^\s]*)(.*):(.*)$/.match(line = next_line)
-      mnemonic, unit, data, info = [*m].slice(1, 4).collect{|s| s.strip}
+      mnemonic, unit, data = [*m].slice(1, 4).collect{|s| s.strip}
  
       case mnemonic
       when 'RUN'
@@ -218,7 +218,7 @@ class LasFile
   end
   
   def skip_block
-    while not /^~.*$/ =~(line = @in.readline);end   
+    while !(/^~.*$/ =~ (line = @in.readline)); end
     put_back_line(line)    
   end
   

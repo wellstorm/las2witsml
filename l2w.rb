@@ -21,7 +21,7 @@ require "#{File.dirname(__FILE__)}/witsml_file"
 require "#{File.dirname(__FILE__)}/las2witsml"
 
 
-options = {:defs => {}}
+options = {}
 
 opts =OptionParser.new do |o|
   o.banner = "Usage: l2w [-nl name] [-uw uid] [-uwb uid] [-ul uid] [-h] lasfile"
