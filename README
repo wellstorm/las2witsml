@@ -20,3 +20,5 @@ License: Apache 2.0
 History:
 
 12 Jun 2012 -- gemified existing code and initial commit. (0.1.1)
+14 Jun 2012 -- proper return values to shell: 0 success, 1 failure. (0.1.2)
+
