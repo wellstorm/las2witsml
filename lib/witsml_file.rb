@@ -3,6 +3,8 @@ require 'time'
 require 'tempfile'
 
 class WitsmlFile
+  class UnrecognizedUnitException < Exception
+  end
   
   UNITS = {'ft'=>'ft',      
     'klbs'=>'klbf',                 
@@ -24,7 +26,147 @@ class WitsmlFile
     'ksi'=>'kpsi',
     'cm'=>'cm',
     'ft per hour'=>'ftPh',
-    'min/ft'=>'minPft'}
+    'min/ft'=>'minPft',
+
+    'KG' => 'kg',
+    'M' => 'm',
+    'F' => 'ft',
+    'FT' => 'ft',
+    'f' => 'ft',
+    'GAPI' => 'gAPI',
+    'GAPI' => 'gAPI',
+    'ohmm' => 'ohm.m',
+    'OHMM' => 'ohm.m',
+    'API' => 'gAPI',
+    'api' => 'gAPI',
+    'DEGC' => 'degC',
+    'M3' => 'm3',
+    'PERC' => '%',
+    'MV' => 'mV',
+    'US' => 'us',
+    'US/M' => 'us/m',
+    'us/f' => 'us/ft',
+    'US/F' => 'us/ft',
+    'S/F' => 's/ft',
+    'IN' => 'in',
+    'B/E' => 'b/elec',
+    'LBF' => 'lbf',
+    'G/C3' => 'g/cm3',
+    'G/CM3' => 'g/cm3',
+    'NAPI' => 'nAPI',
+    'F3' => 'ft3',
+    'BARN' => 'b',
+    'F/S' => 'ft/s',
+    'DEC' => 'Euc',
+    'LBS' => 'lbf',
+    'lbs' => 'lbf',
+    'None' => 'Euc',
+    'PU' => '%',
+    'MM' => 'mm',
+    'LB' => 'lbf',
+    'KGM3' => 'kg/m3',
+    'K/M3' => 'kg/m3',
+    'KG/M3' => 'kg/m3',
+    'MS/M' => 'ms/m',
+    'FT/SEC.' => 'ft/s',
+    'FT/SEC' => 'ft/s',
+    'V/V' => 'Euc',
+    'CFCF' => 'Euc',
+    'ohm-m' => 'ohm.m',
+    'ohm.' => 'ohm.m',
+    'OHMS' => 'ohm.m',
+    'OHM-' => 'ohm.m',
+    'Ohmm' => 'ohm.m',
+    'F/HR' => 'ft/h',
+    'g/cc' => 'g/cm3',
+    'G/CC' => 'g/cm3',
+    'MD' => 'mD.ft',
+    'MMHO' => 'mmho/m',
+    'usec/ft' => 'us/ft',
+    'B/CC' => 'b/cm3',
+    'F/MN' => 'ft3/min.ft2',
+    'PSI' => 'psi',
+    'MSEC' => 'ms',
+    'Ft/s' => 'ft/s',
+    'ft/hr' => 'ft/h',
+    'MM/M' => 'mmho/m',
+    'gm/cc' => 'g/cm3',
+    'INCH' => 'in',
+    'USEC/M' => 'us/m',
+    'Inches' => 'in',
+    'F/M' => 'ft/min',
+    'Api' => 'gAPI',
+    'APi' => 'gAPI',
+    'Deci' => 'Euc',
+    'DECP' => 'Euc',
+    'decp' => 'Euc',
+    'percent' => '%',
+    'PERCENT' => '%',
+    'hrs' => 'h',
+    'RPM' => 'rpm',
+    'GPM' => 'galUS/min',
+    'amps' => 'A',
+    'BN/E' => 'b/elec',
+    'barrels' => 'bbl',
+    'APSI' => 'psia',
+    'PA' => 'Pa',
+    'PPM' => 'ppm', 
+    'USEC/FT' => 'us/ft',
+    'USEC' => 'us',
+    'msec' => 'ms',
+    'GPA' => 'GPa',
+    'Ft' => 'ft',  
+    'fT' => 'ft',
+    'KGM/M3S' => 'kg/m2.s',
+    'FRAC' => '%',
+    'FRACTION' => '%',
+    'fraction' => '%',
+    'v/v' => 'Euc',
+    'uspf' => 'us/ft',
+    'USFT' => 'us/ft',
+    'US/FT' => 'us/ft',
+    'FT/HR' => 'ft/h',
+    'FT/H' => 'ft/h',
+    'fph' => 'ft/h',
+    'FPM' => 'ft/m',
+    'FT3/FT3' => 'ft3/ft3',
+    'sec' => 's',
+    'usec' => 'us',
+    'INCHES' => 'in',
+    'inch' => 'in',
+    'HR' => 'h',
+    'DEGF' => 'degF',
+    'HZ' => 'Hz',
+    'KHZ' => 'kHz',
+    'none' => 'Euc',
+    'NONE' => 'Euc',
+    'unitless' => 'Euc',
+    'unitle' => 'Euc',
+    'dec' => 'Euc',
+    'PPK' => 'ppk',
+    '1/FT' => '1/ft',
+    'ft/sec' => 'ft/s',
+    'F/S2' => 'ft/s2',
+    'M/S2' => 'm/s2',
+    'OER' => 'Oe',
+    'MS' => 'ms',
+    'MMHO/M' => 'mmho/m',
+    'mmo/m' => 'mmho/m',
+    'MO/M' => 'mho/m',
+    'FT3' => 'ft3',
+    'AAPI' => 'gAPI',
+    'aapi' => 'gAPI',
+    'db/ft' => 'dB/ft',
+    'Gm/cc' => 'g/cm3',
+    'UA' => 'uA',
+    'MA' => 'mA',
+    'mv' => 'mV',
+    'LB/LB' => 'wtpercent',
+    'lbf/lbf' => 'wtpercent',
+    'gft/cm3s' => 'g.ft/cm3.s',
+    'usec/m' => 'us/m'
+
+  }
 
   def initialize(out, witsml_version = 1410)
     @indent = 0
@@ -234,7 +376,7 @@ class WitsmlFile
   def add_log_curve_info(las_lci, column_index, min_index, max_index, measured_depth_unit)
     add_element('logCurveInfo', {'uid' => las_lci.mnemonic[0..63]}) do
       add_text_element  'mnemonic', las_lci.mnemonic[0..31]
-      add_text_element  'unit', las_lci.unit.downcase if las_lci.unit
+      add_text_element  'unit',  normalize_unit(las_lci.unit) if las_lci.unit
       
       if measured_depth_unit then
         add_text_element  'minIndex', min_index, {'uom'=>measured_depth_unit} if min_index
@@ -303,12 +445,7 @@ class WitsmlFile
 
     return las_unit if !las_unit
     
-    map_las_to_witsml_units = {
-      'f'=>'ft', 
-      'feet'=>'ft',
-      'foot'=>'ft',
-      'meters'=>'m',
-      'meter'=>'m'}
+    map_las_to_witsml_units = UNITS
 
 # just a few random ones from CWLS web site:
 # RHOB  .K/M3       45 350 02 00 :  2       BULK DENSITY
@@ -319,8 +456,11 @@ class WitsmlFile
 #CALI  .MM         45 280 01 00 :  10      CALIPER
 #DRHO .K/M3        45 356 01 00 :  11      DENSITY CORRECTION
  
-    map_las_to_witsml_units[las_unit.downcase] || las_unit.downcase
-    
+    retval = map_las_to_witsml_units[las_unit.downcase] 
+    if !retval 
+      raise UnrecognizedUnitException, las_unit 
+    end
+    retval
   end
 
 end
