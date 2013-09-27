@@ -237,7 +237,9 @@ class WitsmlFile
   end
  
  
- 
+  def not_empty s
+    s && s.length > 0
+  end
   
   def from_las_file(las_file, uid_well='$UIDWELL', uid_wellbore='$UIDWELLBORE', uid='$UID', name='$NAME', verbose=false)
     new_lcis, _, is_index_index, get_index = digest_las(las_file)  #unused index_lci
@@ -257,7 +259,7 @@ class WitsmlFile
         add_text_element  'nameWellbore', name
         add_text_element  'name', name
         #add_text_element  'dataRowCount', las_file.curve_values.length
-        add_text_element  'serviceCompany', las_file.service_company
+        add_text_element  'serviceCompany', las_file.service_company if not_empty(las_file.service_company)
         add_text_element  'description', 'Created by Wellstorm LAS Import'
 
         measured_depth_unit = normalize_unit(las_file.measured_depth_unit);
