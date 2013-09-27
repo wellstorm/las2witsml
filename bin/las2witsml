@@ -72,8 +72,8 @@ ARGV.each do|a|
     version = 1410
   end
   begin  
-    l2w.run infile, outfile, options[:uw] || "",  options[:uwb] || "",  options[:ul] || "", options[:name] || 'Untitled', version, options[:v] != false
-    0
+    succeed = l2w.run infile, outfile, options[:uw] || "",  options[:uwb] || "",  options[:ul] || "", options[:name] || 'Untitled', version, options[:v] != false
+    succeed ? 0 : 1
   rescue => e
     $stderr.puts e.backtrace
     1
