@@ -1,6 +1,6 @@
 #require 'java'
-#require 'las_file'
-#require 'witsml_file'
+require 'las_file'
+require 'witsml_file'
 class Las2Witsml
   def run in_stream, out_stream, uid_well, uid_wellbore, uid_log, name_log, version = 1411, verbose=false
     begin
