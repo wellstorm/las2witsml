@@ -19,11 +19,12 @@ require 'optparse'
 require "las_file"
 require "witsml_file"
 require "las2witsml"
+require "uom"
 
 options = {:v=>false}
 
 opts =OptionParser.new do |o|
-  o.banner = "Usage: las2witsml [-n name] [-u uid] [-b uid] [-l uid] [-x version] [-h] [-v] lasfile"
+  o.banner = "Usage: las2witsml [-n name] [-u uid] [-b uid] [-l uid] [-m uomfile] [-x version] [-h] [-v] lasfile"
 
   o.on("-n", "--namelog name", "Name to give the WITSML log; default 'Untitled'") do |v|
     options[:name] = v
@@ -41,6 +42,11 @@ opts =OptionParser.new do |o|
   o.on("-x", "--version  version", "WITSML version to emit, either 1.3.1 or 1.4.1; default 1.4.1") do |v|
     options[:version] = v
   end
+
+  o.on("-m", "--uomfile  path", "Path to a units of measure JSON file, mapping foreign to WITSML units of measure (like default file '#{Uom::default_uom_file}')") do |v|
+    options[:uom_file] = v
+  end
+
   o.on("-v", "--verbose", "Emit diagnostic output on stderr") do |v|
     options[:v] = v
   end
@@ -72,7 +78,7 @@ ARGV.each do|a|
     version = 1410
   end
   begin  
-    succeed = l2w.run infile, outfile, options[:uw] || "",  options[:uwb] || "",  options[:ul] || "", options[:name] || 'Untitled', version, options[:v] != false
+    succeed = l2w.run infile, outfile, options[:uw] || "",  options[:uwb] || "",  options[:ul] || "", options[:name] || 'Untitled', version, options[:v] != false, options[:uom_file]
     succeed ? 0 : 1
   rescue => e
     $stderr.puts e.backtrace
