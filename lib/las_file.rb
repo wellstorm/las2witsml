@@ -22,6 +22,7 @@ class LasFile
     @log_curve_infos = []
     @curve_values = []
     @in = io
+    @next_line=nil
   end
   
   def process verbose=false
