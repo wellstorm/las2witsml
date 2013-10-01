@@ -391,6 +391,7 @@ class WitsmlFile
         add_text_element  'columnIndex', column_index.to_s
       end
       add_text_element  'curveDescription',las_lci.description if las_lci.description && las_lci.description.length > 0
+      add_text_element  'typeLogData', 'float'
     end
   end
 
