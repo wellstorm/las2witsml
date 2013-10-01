@@ -21,6 +21,10 @@
     "ft per hour" :"ftPh",
     "min/ft" :"minPft",
 
+    "kip" : "klbf",
+    "kip-ft" : "kft.lbf",
+    "gal/min" : "galUSPmin",
+    "lb/gal": "lbmPgalUS",
 
     "f" : "ft",
     "gapi" : "gAPI",
