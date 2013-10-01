@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = %q{las2witsml}
-  s.version = "0.1.3"
+  s.version = "0.1.4"
   s.date = %q{2013-10-01}
   s.authors = ["Hugh Winkler"]
   s.email = %q{hugh.winkler@drillinginfo.com}
