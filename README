@@ -10,8 +10,7 @@ Usage: las2witsml [-n name] [-u uid] [-b uid] [-l uid] [-x version] [-m uomfile]
     -l, --uidlog  uid                WITSML uid to assign the log
     -x, --version  version           WITSML version to emit, either 1.3.1 or 1.4.1; default 1.4.1
     -m, --uomfile  path              Path to a units of measure JSON file, mapping foreign  
-                                     to WITSML units of measure (like default file 
-                                     '/Users/hughw/las2witsml/lib/uom.json')
+                                     to WITSML units of measure [default] (https://github.com/wellstorm/las2witsml/blob/master/lib/uom.json "The default uom.json file")
     -v, --verbose                    Emit diagnostic output on stderr
     -h, --help                       Show this message
 
