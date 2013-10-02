@@ -3,14 +3,14 @@ las2witsml -- Convert Log ASCII Stanfard (LAS) files to WITSML <log> objects.
 Use this script to convert LAS files to WITSML logs. The script attempts to be forgiving
 of some commonly encountered variations. It can process most LAS v2 and v3 files.  
 
-Usage: las2witsml [-n name] [-u uid] [-b uid] [-l uid] [-x version] [-h] [-v] lasfile
+Usage: las2witsml [-n name] [-u uid] [-b uid] [-l uid] [-x version] [-m uomfile] [-h] [-v] lasfile
     -n, --namelog name               Name to give the WITSML log; default 'Untitled'
     -u, --uidwell uid                WITSML uid of the containing well
     -b, --uidwellbore uid            WITSML uid of the containing wellbore
     -l, --uidlog  uid                WITSML uid to assign the log
     -x, --version  version           WITSML version to emit, either 1.3.1 or 1.4.1; default 1.4.1
-    -m, --uomfile  path              Path to a units of measure JSON file, mapping foreign to 
-                                     WITSML units of measure (like default file 
+    -m, --uomfile  path              Path to a units of measure JSON file, mapping foreign  
+                                     to WITSML units of measure (like default file 
                                      '/Users/hughw/las2witsml/lib/uom.json')
     -v, --verbose                    Emit diagnostic output on stderr
     -h, --help                       Show this message
