@@ -1,38 +1,38 @@
-<logs version='1.3.1.1' xmlns='http://www.witsml.org/schemas/131'>
-  <log uid='l2' uidWellbore='b1' uidWell='u1'>
-    <nameWell>md log</nameWell>
-    <nameWellbore>md log</nameWellbore>
-    <name>md log</name>
+<logs xmlns='http://www.witsml.org/schemas/1series' version='1.4.1.0'>
+  <log uidWell='' uidWellbore='' uid=''>
+    <nameWell>Untitled</nameWell>
+    <nameWellbore>Untitled</nameWellbore>
+    <name>Untitled</name>
     <serviceCompany>Scientific Drilling</serviceCompany>
     <description>Created by Wellstorm LAS Import</description>
     <indexType>measured depth</indexType>
     <startIndex uom='ft'>6500.0</startIndex>
     <endIndex uom='ft'>15497.5</endIndex>
-    <indexCurve columnIndex='1'>MD</indexCurve>
+    <indexCurve>MD</indexCurve>
     <nullValue>-999.0000</nullValue>
     <logCurveInfo uid='MD'>
       <mnemonic>MD</mnemonic>
       <unit>ft</unit>
       <minIndex uom='ft'>6500.0000</minIndex>
       <maxIndex uom='ft'>15497.5000</maxIndex>
-      <columnIndex>1</columnIndex>
       <curveDescription>Measured Depth</curveDescription>
+      <typeLogData>float</typeLogData>
 
     </logCurveInfo>
     <logCurveInfo uid='Weight-on-Bit(surf,avg)'>
       <mnemonic>Weight-on-Bit(surf,avg)</mnemonic>
-      <unit>kip</unit>
+      <unit>klbf</unit>
       <minIndex uom='ft'>6500.0000</minIndex>
       <maxIndex uom='ft'>15497.5000</maxIndex>
-      <columnIndex>2</columnIndex>
+      <typeLogData>float</typeLogData>
 
     </logCurveInfo>
     <logCurveInfo uid='TopDrvTorque'>
       <mnemonic>TopDrvTorque</mnemonic>
-      <unit>kip-ft</unit>
+      <unit>kft.lbf</unit>
       <minIndex uom='ft'>6500.0000</minIndex>
       <maxIndex uom='ft'>15497.5000</maxIndex>
-      <columnIndex>3</columnIndex>
+      <typeLogData>float</typeLogData>
 
     </logCurveInfo>
     <logCurveInfo uid='TopDrvSpeed'>
@@ -40,15 +40,15 @@
       <unit>rpm</unit>
       <minIndex uom='ft'>6500.0000</minIndex>
       <maxIndex uom='ft'>15438.0000</maxIndex>
-      <columnIndex>4</columnIndex>
+      <typeLogData>float</typeLogData>
 
     </logCurveInfo>
     <logCurveInfo uid='Temperature'>
       <mnemonic>Temperature</mnemonic>
-      <unit>degf</unit>
+      <unit>degF</unit>
       <minIndex uom='ft'>6500.0000</minIndex>
       <maxIndex uom='ft'>15497.5000</maxIndex>
-      <columnIndex>5</columnIndex>
+      <typeLogData>float</typeLogData>
 
     </logCurveInfo>
     <logCurveInfo uid='StandpipePressure'>
@@ -56,31 +56,31 @@
       <unit>psi</unit>
       <minIndex uom='ft'>6570.5000</minIndex>
       <maxIndex uom='ft'>15497.5000</maxIndex>
-      <columnIndex>6</columnIndex>
+      <typeLogData>float</typeLogData>
 
     </logCurveInfo>
     <logCurveInfo uid='ROP(MWD)'>
       <mnemonic>ROP(MWD)</mnemonic>
-      <unit>ft/hr</unit>
+      <unit>ft/h</unit>
       <minIndex uom='ft'>6500.0000</minIndex>
       <maxIndex uom='ft'>15497.5000</maxIndex>
-      <columnIndex>7</columnIndex>
+      <typeLogData>float</typeLogData>
 
     </logCurveInfo>
     <logCurveInfo uid='MudFlowIn'>
       <mnemonic>MudFlowIn</mnemonic>
-      <unit>gal/min</unit>
+      <unit>galUSPmin</unit>
       <minIndex uom='ft'>6500.0000</minIndex>
       <maxIndex uom='ft'>13808.0000</maxIndex>
-      <columnIndex>8</columnIndex>
+      <typeLogData>float</typeLogData>
 
     </logCurveInfo>
     <logCurveInfo uid='MergedcurvefromECD,ECDofLogAnnulusPress,ECDofLogAnnulusPress(MWD'>
       <mnemonic>MergedcurvefromECD,ECDofLogAnnul</mnemonic>
-      <unit>lb/gal</unit>
+      <unit>lbmPgalUS</unit>
       <minIndex uom='ft'>6500.0000</minIndex>
       <maxIndex uom='ft'>15441.5000</maxIndex>
-      <columnIndex>9</columnIndex>
+      <typeLogData>float</typeLogData>
 
     </logCurveInfo>
     <logCurveInfo uid='LogRMSVibrations'>
@@ -88,7 +88,7 @@
       <unit>g</unit>
       <minIndex uom='ft'>6500.0000</minIndex>
       <maxIndex uom='ft'>13788.5000</maxIndex>
-      <columnIndex>10</columnIndex>
+      <typeLogData>float</typeLogData>
 
     </logCurveInfo>
     <logCurveInfo uid='LogPipePress'>
@@ -96,15 +96,15 @@
       <unit>psi</unit>
       <minIndex uom='ft'>6500.0000</minIndex>
       <maxIndex uom='ft'>15448.5000</maxIndex>
-      <columnIndex>11</columnIndex>
+      <typeLogData>float</typeLogData>
 
     </logCurveInfo>
     <logCurveInfo uid='LogGammaRay'>
       <mnemonic>LogGammaRay</mnemonic>
-      <unit>aapi</unit>
+      <unit>gAPI</unit>
       <minIndex uom='ft'>6500.0000</minIndex>
       <maxIndex uom='ft'>13787.5000</maxIndex>
-      <columnIndex>12</columnIndex>
+      <typeLogData>float</typeLogData>
 
     </logCurveInfo>
     <logCurveInfo uid='LogAnnulusPress'>
@@ -112,7 +112,7 @@
       <unit>psi</unit>
       <minIndex uom='ft'>6500.0000</minIndex>
       <maxIndex uom='ft'>15497.5000</maxIndex>
-      <columnIndex>13</columnIndex>
+      <typeLogData>float</typeLogData>
 
     </logCurveInfo>
     <logCurveInfo uid='HookLoad(MWD)'>
@@ -120,7 +120,7 @@
       <unit>lbf</unit>
       <minIndex uom='ft'>6500.0000</minIndex>
       <maxIndex uom='ft'>15497.5000</maxIndex>
-      <columnIndex>14</columnIndex>
+      <typeLogData>float</typeLogData>
 
     </logCurveInfo>
     <logCurveInfo uid='Gas(avg)'>
@@ -128,16 +128,18 @@
       <unit>%</unit>
       <minIndex uom='ft'>6500.0000</minIndex>
       <maxIndex uom='ft'>15497.5000</maxIndex>
-      <columnIndex>15</columnIndex>
+      <typeLogData>float</typeLogData>
 
     </logCurveInfo>
     <logCurveInfo uid='BlockPosition(MWD)'>
       <mnemonic>BlockPosition(MWD)</mnemonic>
       <unit>ft</unit>
-      <columnIndex>16</columnIndex>
+      <typeLogData>float</typeLogData>
 
     </logCurveInfo>
     <logData>
+      <mnemonicList>MD,Weight-on-Bit(surf,avg),TopDrvTorque,TopDrvSpeed,Temperature,StandpipePressure,ROP(MWD),MudFlowIn,MergedcurvefromECD,ECDofLogAnnulusPress,ECDofLogAnnulusPress(MWD),LogRMSVibrations,LogPipePress,LogGammaRay,LogAnnulusPress,HookLoad(MWD),Gas(avg),BlockPosition(MWD)</mnemonicList>
+      <unitList>ft,kip,kip-ft,rpm,degf,psi,ft/hr,gal/min,lb/gal,g,psi,aapi,psi,lbf,%,ft</unitList>
       <data>6500.0000,14.7623,0.0000,0.0000,116.5256,2115.5936,-999.0000,563.0000,9.5906,4.0057,4514.0690,94.3741,3238.2363,176825.5172,1.0000,68.6300</data>
       <data>6500.5000,14.7623,0.0000,0.0000,116.5204,2115.9913,-999.0000,563.0000,9.6665,3.9734,4496.0473,94.4447,3264.1351,176825.3346,1.0000,68.6305</data>
       <data>6501.0000,14.7623,0.0000,0.0000,116.5152,2116.3890,-999.0000,563.0000,9.6425,3.9411,4487.9716,94.5152,3256.2654,176825.1519,1.0000,68.6311</data>
