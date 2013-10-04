@@ -26,4 +26,4 @@ History:
 14 Jun 2012 -- proper return values to shell: 0 success, 1 failure. (0.1.2)
 30 Sep 2013 -- extended list of units of measure; throw exception if unrecognized uom. (0.1.3)
  1 Oct 2013 -- support for external uom file (0.1.4)
-
+ 4 Oct 2013 -- report all the uom conversion errors if there are any. (0.1.5)
