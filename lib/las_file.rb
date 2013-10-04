@@ -16,13 +16,30 @@ class LasFile
   :start_measured_depth_index, :stop_measured_depth_index, 
   :start_date_time_index, :stop_date_time_index,
   :null_value, :service_company, :curve_values,
-  :elevation_kelly_bushing, :log_measured_from, :permanent_datum, :above_permanent_datum
+  :elevation_kelly_bushing, :log_measured_from, :permanent_datum, :above_permanent_datum,
+  :elevation_permanent_datum
     
   def initialize(io)
     @log_curve_infos = []
     @curve_values = []
     @in = io
     @next_line=nil
+
+    @measured_depth_unit =nil
+    @start_measured_depth_index=nil
+    @stop_measured_depth_index=nil
+    @start_date_time_index=nil
+    @stop_date_time_index=nil
+    @null_value=nil
+    @service_company=nil
+    @curve_values=nil
+    @elevation_kelly_bushing=nil
+    @log_measured_from=nil
+    @permanent_datum=nil
+    @above_permanent_datum=nil
+    @elevation_permanent_datum = nil
+    
+
   end
   
   def process verbose=false
