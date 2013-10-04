@@ -18,6 +18,9 @@ class Las2Witsml
     rescue => e
       $stderr.puts e.backtrace.join("\n")
       false
+    rescue  WitsmlFile::ConversionError => e
+      $stderr.puts e.message
+      false
     end
   end
 end

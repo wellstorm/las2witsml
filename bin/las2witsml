@@ -65,7 +65,7 @@ if ( !options[:url] )
   #exit 1
 end
 
-
+succeed = false
 ARGV.each do|a|
   l2w = Las2Witsml.new
   infile = File.new a, 'r'
@@ -79,11 +79,16 @@ ARGV.each do|a|
   end
   begin  
     succeed = l2w.run infile, outfile, options[:uw] || "",  options[:uwb] || "",  options[:ul] || "", options[:name] || 'Untitled', version, options[:v] != false, options[:uom_file]
-    succeed ? 0 : 1
   rescue => e
-    $stderr.puts e.backtrace
-    1
+    $stderr.puts e
+    exit 1
   end
+end
+
+if succeed 
+  exit 0
+else
+  exit 1
 end
 
 

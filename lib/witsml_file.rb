@@ -6,7 +6,15 @@ require 'uom'
 class WitsmlFile
   class UnrecognizedUnitException < Exception
   end
-  
+
+  class ConversionError < Exception
+    attr_accessor :bad_units
+    def initialize bad_units
+      super "Units conversion problems: #{bad_units}"
+      @bad_units = bad_units
+    end
+  end
+
   def initialize(out, witsml_version = 1410, uom_file = nil)
     @indent = 0
     @out = out
@@ -51,7 +59,7 @@ class WitsmlFile
       get_index = lambda do |values|
         date = values[date_index]
         #$stderr.puts "date #{date} fmt = #{date_fmt}"
-       
+        
         if date_fmt == '1' then
           #$stderr.puts "date = #{date}"
           offset = las_file.start_date_time_index
@@ -74,15 +82,19 @@ class WitsmlFile
     end
     [new_lcis, index_lci, is_index_index, get_index]
   end
- 
- 
+  
+  
   def not_empty s
     s && s.length > 0
   end
   
+  # Populate the WITSML log from a LAS file.
+  # Return nil on success.
+  # Raise a ConversionError exception containing a problem description on failure.
+  
   def from_las_file(las_file, uid_well='$UIDWELL', uid_wellbore='$UIDWELLBORE', uid='$UID', name='$NAME', verbose=false)
     new_lcis, _, is_index_index, get_index = digest_las(las_file)  #unused index_lci
- 
+    
     if @witsml_version >= 1410
       ns = 'http://www.witsml.org/schemas/1series'
       vers = '1.4.1.0'
@@ -91,6 +103,9 @@ class WitsmlFile
       vers = '1.3.1.1'
     end
     
+    # Accumulate bad unit references in an array
+    bad_units = []
+
     index_curve = new_lcis[0].mnemonic  # assume first column is index
     add_element('logs',{'xmlns'=>ns, 'version'=>vers}) do
       add_element('log', {'uidWell' => uid_well, 'uidWellbore'=>uid_wellbore, 'uid' => uid}) do
@@ -101,16 +116,20 @@ class WitsmlFile
         add_text_element  'serviceCompany', las_file.service_company if not_empty(las_file.service_company)
         add_text_element  'description', 'Created by Wellstorm LAS Import'
 
-        measured_depth_unit = normalize_unit(las_file.measured_depth_unit);
-      
+        begin
+          measured_depth_unit = normalize_unit(las_file.measured_depth_unit);
+        rescue UnrecognizedUnitException => e
+          # record the error, set a default value for unit, and continue
+          bad_units.push( {:name => 'measured depth', :unit => e.message})
+          measured_depth_unit = 'unitless'
+        end
+
         if measured_depth_unit then
           add_text_element  'indexType', 'measured depth'
           add_text_element  'startIndex', las_file.start_measured_depth_index, {'uom' => measured_depth_unit} if las_file.start_measured_depth_index
           add_text_element  'endIndex', las_file.stop_measured_depth_index, {'uom' => measured_depth_unit} if las_file.stop_measured_depth_index        
         else
           add_text_element  'indexType', 'date time'
-
-
           #puts ("start index in LAS is #{las_file.start_date_time_index}")
 
           add_text_element  'startDateTimeIndex', las_file.start_date_time_index.iso8601 if las_file.start_date_time_index
@@ -118,14 +137,14 @@ class WitsmlFile
         end 
         #add_text_element  'direction' 
         
-        if @witsml_version >= 1410
+        if @witsml_version >= 1410 then
           add_text_element  'indexCurve', index_curve
         else
           add_text_element  'indexCurve', index_curve, {'columnIndex'=>1}
         end
         add_text_element  'nullValue', las_file.null_value
 
-       
+        
         begin
           # use this new array of curve values we build
           tempfile = Tempfile.new 'las2witsml'
@@ -140,53 +159,65 @@ class WitsmlFile
             tempfile << idx
             #$stderr.puts "idx #{idx}"
             values.each_with_index do |v, i|
-            
+
               start[i] = idx if start[i].nil? and v != las_file.null_value
               stop[i] = idx if v != las_file.null_value
               tempfile << ",#{v}" if  !is_index_index.call(i) 
 
-             # $stderr.puts "put #{v} on tempfile"
+              # $stderr.puts "put #{v} on tempfile"
             end
             tempfile << $/
             nil
           end
           $stderr.puts "done adding lines to tempfile" if verbose   
- 
+          
           tempfile.rewind 
 
           $stderr.puts "rewound #{tempfile}" if verbose
- 
+          
           # Now we can build the lcis, surveying each curve for its min/max indexes
           new_lcis.each_with_index do |lci, index|
-            add_log_curve_info lci, (index + 1), start[index+1],  stop[index+1], measured_depth_unit
+            begin
+              add_log_curve_info lci, (index + 1), start[index+1],  stop[index+1], measured_depth_unit
+            rescue UnrecognizedUnitException => e
+              bad_units.push( {:name => lci.mnemonic, :unit => e.message})          
+            end
           end
 
           $stderr.puts "added #{new_lcis.length} LCIs" if verbose   
-        
+          
           
           # Now add the curve data
-          add_element 'logData' do
-            if @witsml_version >= 1410
-              add_text_element 'mnemonicList', new_lcis.map{|lci| lci.mnemonic}.join(',')
-              add_text_element 'unitList', new_lcis.map{|lci| lci.unit}.join(',')              
-            end 
+          if bad_units.length == 0 then 
+            add_element 'logData' do
+              if @witsml_version >= 1410
+                add_text_element 'mnemonicList', new_lcis.map{|lci| lci.mnemonic}.join(',')
+                add_text_element 'unitList', new_lcis.map{|lci| lci.unit}.join(',')              
+              end 
 
-            n = 0
-            tempfile.each_line do |values|
-              add_text_element 'data', values
-              n = n + 1
-              $stderr.puts "converted #{n} lines to WITSML" if (verbose && n % 1000 == 0 )
+              n = 0
+              tempfile.each_line do |values|
+                add_text_element 'data', values
+                n = n + 1
+                $stderr.puts "converted #{n} lines to WITSML" if (verbose && n % 1000 == 0 )
+              end
+              $stderr.puts "converted a total of #{n} lines to WITSML" if verbose
             end
-            $stderr.puts "converted a total of #{n} lines to WITSML" if verbose
           end
-        rescue
+        ensure
           tempfile.close true
         end
-
       end
     end
+    #return nil if all succeeded, or a problem hash if not
+    if bad_units.length == 0
+      return nil
+    else
+      e = ConversionError.new bad_units
+      raise e
+    end
   end
-  
+    
   private
   def add_element name, attrs = {}, one_liner = false
     @indent.times {@out.write " "}
@@ -244,7 +275,7 @@ class WitsmlFile
 
 
   def make_time_indexes(lcis) 
- 
+    
     # Typically we see DATE and TIME
     # We can also see only TIME in which case we expect long integer seconds since 1970
     # (There's no spec that says that; but this data comes from SLB's IDEAL which uses Unix epoch)
@@ -256,7 +287,7 @@ class WitsmlFile
     
     $stderr.puts("date_index #{date_index}, time_index #{time_index}")    
 
- 
+    
     if !time_index then
       #assume time will be in the next column
       time_index = (date_index + 1) if date_index
@@ -277,7 +308,7 @@ class WitsmlFile
     raise "No TIME or DATE" if (!time_index && !date_index)
     
     [date_index, time_index, date_fmt]
-          
+    
   end
 
   def normalize_unit(las_unit)
@@ -287,15 +318,15 @@ class WitsmlFile
 
     return las_unit if !las_unit
 
-# just a few random ones from CWLS web site:
-# RHOB  .K/M3       45 350 02 00 :  2       BULK DENSITY
-#NPHI  .VOL/VO     42 890 00 00 :  3       NEUTRON POROSITY - SANDSTONE
-#MSFL  .OHMM       20 270 01 00 :  4       Rxo RESISTIVITY
-# SP    .MV         07 010 01 00 :  8       SPONTANEOUS POTENTIAL
-#GR    .GAPI       45 310 01 00 :  9       GAMMA RAY
-#CALI  .MM         45 280 01 00 :  10      CALIPER
-#DRHO .K/M3        45 356 01 00 :  11      DENSITY CORRECTION
- 
+    # just a few random ones from CWLS web site:
+    # RHOB  .K/M3       45 350 02 00 :  2       BULK DENSITY
+    #NPHI  .VOL/VO     42 890 00 00 :  3       NEUTRON POROSITY - SANDSTONE
+    #MSFL  .OHMM       20 270 01 00 :  4       Rxo RESISTIVITY
+    # SP    .MV         07 010 01 00 :  8       SPONTANEOUS POTENTIAL
+    #GR    .GAPI       45 310 01 00 :  9       GAMMA RAY
+    #CALI  .MM         45 280 01 00 :  10      CALIPER
+    #DRHO .K/M3        45 356 01 00 :  11      DENSITY CORRECTION
+    
     retval = @uom.translate las_unit
     if !retval 
       raise UnrecognizedUnitException, las_unit 
